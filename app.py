@@ -108,8 +108,6 @@ def y(t):
   aux = 1-mean_rank(t)
   auxx = np.log(aux)
   auxxx = np.log(-auxx)
-  #st.write(aux, auxx, auxxx)
-  #st.write("np.log(-np.log(1-mean_rank(t)): ", np.log(-np.log(1-mean_rank(t))))
   return np.log(-np.log(1-mean_rank(t)))
 
 def soma_x(data):
@@ -123,7 +121,6 @@ def soma_y(data):
   soma=0;
   for i in range(st.session_state.n_count):
     soma += y(i+1)
-    #st.write("soma[",i+1,"]", y(i+1))
   return soma
 
 def soma_xx(data):
@@ -139,7 +136,6 @@ def xpory(data):
   for a in data:
     x = np.log(a)
     soma += x*y(i)
-    #st.write("x:", x, "y:", y(i), "soma:", soma)
     i+=1
   return soma
 
@@ -154,7 +150,7 @@ def app():
   add_value = col_a.number_input("Adicionar tempo de vida", step=1.0, value=None,format="%f ", key="add_input")
 
   if col_a.button("Adicionar"):
-    if not np.isnan(add_value):  # Ensure valid input
+    if not np.isnan(add_value):
       st.session_state.data = np.append(st.session_state.data, add_value)
       st.session_state.data = np.sort(st.session_state.data)
       st.success(f"Valor {add_value} adicionado!")
@@ -184,7 +180,6 @@ def app():
   if st.button("Calcular a distribuição Weibull"):
     data = st.session_state.data
   
-    #st.write(data)
     st.session_state.n_count = len(data)
     n_count = st.session_state.n_count
     a = (n_count*xpory(data)-soma_x(data)*soma_y(data))/(n_count*soma_xx(data)-soma_x(data)*soma_x(data))
@@ -194,7 +189,7 @@ def app():
     x = np.linspace(data.min(), data.max(), 1000)
     weibull_d = weib(x, n, beta)
 
-    # Plot histogram and Weibull PDF
+    # Plot o histrograma e a distribuição
     bin_size = (data.max()-data.min())/n_count
     fig, ax = plt.subplots()
     ax.hist(data, bins=16, density=True, alpha=0.5, label="Histograma")
